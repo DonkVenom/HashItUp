@@ -18,3 +18,5 @@ The following hashing algorithms are currently supported:
 
 ______
 
+
+>you can run this file on your localhost or your server.
