@@ -20,3 +20,6 @@ ______
 
 
 >you can run this file on your localhost or your server.
+
+
+>Note: HashItUp uses Bootstrap and other third party libraries.
