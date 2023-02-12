@@ -1,0 +1,99 @@
+<!--
+
+ /$$   /$$                     /$$             /$$$$$$ /$$           /$$   /$$           /$$
+| $$  | $$                    | $$            |_  $$_/| $$          | $$  | $$          | $$
+| $$  | $$  /$$$$$$   /$$$$$$$| $$$$$$$         | $$ /$$$$$$        | $$  | $$  /$$$$$$ | $$
+| $$$$$$$$ |____  $$ /$$_____/| $$__  $$        | $$|_  $$_/        | $$  | $$ /$$__  $$| $$
+| $$__  $$  /$$$$$$$|  $$$$$$ | $$  \ $$        | $$  | $$          | $$  | $$| $$  \ $$|__/
+| $$  | $$ /$$__  $$ \____  $$| $$  | $$        | $$  | $$ /$$      | $$  | $$| $$  | $$    
+| $$  | $$|  $$$$$$$ /$$$$$$$/| $$  | $$       /$$$$$$|  $$$$/      |  $$$$$$/| $$$$$$$/ /$$
+|__/  |__/ \_______/|_______/ |__/  |__/      |______/ \___/         \______/ | $$____/ |__/
+                                                                              | $$          
+                                                                              | $$          
+                                                                              |__/          
+
+
+-->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Hashing Example</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container my-4">
+  <h1>Text Hashing Example</h1>
+
+  <form>
+    <div class="form-group">
+      <label for="text-input">Enter text:</label>
+      <input type="text" class="form-control" id="text-input">
+    </div>
+    <button type="button" class="btn btn-primary" onclick="hashText()">Hash Text</button>
+  </form>
+
+  <h2>Hashes</h2>
+  <ul id="hash-list"></ul>
+
+  <div id="drop-zone" class="border border-primary p-3 my-4">
+    <p>Drag and drop a file here to calculate SHA1 and SHA256 hashes:</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+  function hashText() {
+    var text = document.getElementById("text-input").value;
+
+    var sha1 = CryptoJS.SHA1(text).toString();
+    var sha256 = CryptoJS.SHA256(text).toString();
+    var sha512 = CryptoJS.SHA512(text).toString();
+    var md5 = CryptoJS.MD5(text).toString();
+
+    var list = document.getElementById("hash-list");
+    list.innerHTML = "<li><b>SHA1:</b> " + sha1 + "</li><br>" +
+                     "<li><b>SHA256:</b> " + sha256 + "</li><br>" +
+                     "<li><b>SHA512:</b> " + sha512 + "</li><br>" +
+		     "<li><b>MD5:</b> " + md5 + "</li><br>";
+  }
+
+  function handleFileDrop(event) {
+    event.preventDefault();
+
+    if (event.dataTransfer.items) {
+      for (var i = 0; i < event.dataTransfer.items.length; i++) {
+        var item = event.dataTransfer.items[i];
+        if (item.kind === 'file') {
+          var file = item.getAsFile();
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var arrayBuffer = event.target.result;
+            var sha1 = CryptoJS.SHA1(arrayBuffer).toString();
+            var sha256 = CryptoJS.SHA256(arrayBuffer).toString();
+            var hashes = "<li><b>SHA1:</b> " + sha1 + "</li><br>" +
+                         "<li><b>SHA256:</b> " + sha256 + "</li><br>";
+            var list = document.getElementById("hash-list");
+            list.innerHTML = hashes;
+          };
+          reader.readAsArrayBuffer(file);
+        }
+      }
+    }
+  }
+
+  function handleDragOver(event) {
+    event.preventDefault();
+  }
+
+  var dropZone = document.getElementById('drop-zone');
+  dropZone.addEventListener('drop', handleFileDrop, false);
+  dropZone.addEventListener('dragover', handleDragOver, false);
+</script>
+
+</body>
+</html>
